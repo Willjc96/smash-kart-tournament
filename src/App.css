@@ -1,38 +1,75 @@
+@import '~antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.container {
   display: flex;
+  justify-content: center;
+  height: 80vh;
   flex-direction: column;
   align-items: center;
+}
+
+.button-text {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
+  text-align: center;
 }
 
-.App-link {
-  color: #61dafb;
+.flex-div {
+display: flex;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.horizontal-align {
+  display: flex;
+  justify-content: space-evenly;
+  width: 50%;
 }
+.horizontal-input-align {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+}
+
+.title {
+  display: grid;
+  justify-content: center;
+  justify-items: center;
+}
+
+.tournament-details-modal {
+  padding-top: 0px;
+  width: 100%;
+}
+
+.select-before {
+  margin-left: 10%;
+  margin-right: 0;
+  width: 40%;
+}
+
+
+.input-fields {
+  margin: 0px 15px 15px 15px;
+}
+
+.input-player-name {
+  margin-bottom: 10px;
+  width: 80vw;
+}
+
+.ant-modal-body {
+  padding-top: 10px;
+  height: 100%;
+  overflow-y: scroll;
+  overflow: auto;
+  max-height: 60vh;
+}
+/* body > div:nth-child(3) > div > div.ant-modal-wrap > div {
+position: absolute;
+left: 1em;
+right: 1em;
+} */
