@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { shiftPlayerOrder } from '../components/shiftPlayerOrder';
 
 function CreateRoundRobin() {
   let teamA = [];
@@ -23,17 +24,6 @@ function CreateRoundRobin() {
   //   playEachPlayer: 1
   // };
   const { tournamentTitle, numberOfPlayers, playerNames, selectedGame, selectedGameLabel, playEachPlayer } = state;
-
-  const shiftPlayerOrder = () => {
-    const newTeamA = teamA;
-    const newTeamB = teamB;
-    const poppedValue = newTeamA.pop();
-    newTeamB.push(poppedValue);
-    const shiftedValue = newTeamB.shift();
-    newTeamA.splice(1, 0, shiftedValue);
-    teamA = newTeamA;
-    teamB = newTeamB;
-  };
 
   const numberOfRounds = playEachPlayer * (numberOfPlayers % 2 === 0 ? numberOfPlayers - 1 : numberOfPlayers);
   // 4 players has 3 rounds to play everyone (AB,CD|AC,BD|AD,BC)
@@ -73,7 +63,7 @@ function CreateRoundRobin() {
     for (let matchNumber = 0; matchNumber < 2; matchNumber++) {
       roundMatchups[roundNumber][`Round${roundNumber}`].push([teamA[matchNumber], teamB[matchNumber]]);
     }
-    shiftPlayerOrder();
+    [teamA, teamB] = shiftPlayerOrder(teamA, teamB);
   }
 
   return (
