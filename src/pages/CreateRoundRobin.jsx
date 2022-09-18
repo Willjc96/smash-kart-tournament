@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { shiftPlayerOrder } from '../components/shiftPlayerOrder';
@@ -10,19 +9,7 @@ function CreateRoundRobin() {
 
   const location = useLocation();
   const state = location.state;
-  // const state = {
-  //   tournamentTitle: "Mario Kart Tournament",
-  //   numberOfPlayers: 5,
-  //   selectedGame: "marioKart8",
-  //   playerNames: [
-  //     { playerNumber: 0, playerName: 'P1' },
-  //     { playerNumber: 1, playerName: 'P2' },
-  //     { playerNumber: 2, playerName: 'P3' },
-  //     { playerNumber: 3, playerName: 'P4' },
-  //     { playerNumber: 4, playerName: 'P5' },
-  //   ],
-  //   playEachPlayer: 1
-  // };
+
   const { tournamentTitle, numberOfPlayers, playerNames, selectedGame, selectedGameLabel, playEachPlayer } = state;
 
   const numberOfRounds = playEachPlayer * (numberOfPlayers % 2 === 0 ? numberOfPlayers - 1 : numberOfPlayers);
@@ -60,7 +47,7 @@ function CreateRoundRobin() {
   }
 
   for (let roundNumber = 0; roundNumber < numberOfRounds; roundNumber++) {
-    for (let matchNumber = 0; matchNumber < 2; matchNumber++) {
+    for (let matchNumber = 0; matchNumber < teamB.length; matchNumber++) {
       roundMatchups[roundNumber][`Round${roundNumber}`].push([teamA[matchNumber], teamB[matchNumber]]);
     }
     [teamA, teamB] = shiftPlayerOrder(teamA, teamB);
@@ -84,10 +71,10 @@ function CreateRoundRobin() {
               {matchRounds.map((match, index) => {
                 const firstPlayerMatchupName = playerNames.filter((player) => {
                   return player.playerNumber == match[0];
-                })[0].playerName;
+                })[0]?.playerName;
                 const secondPlayerMatchupName = playerNames.filter((player) => {
                   return player.playerNumber == match[1];
-                })[0].playerName;
+                })[0]?.playerName;
                 return (
                   <div>
                     <p>
@@ -100,11 +87,6 @@ function CreateRoundRobin() {
           );
         })}
       </div>
-
-      <h1>{numberOfPlayers}</h1>
-      {playerNames.map((player) => {
-        return <h2>{player.playerName}</h2>;
-      })}
 
       <Link to='/'>
         <button>
