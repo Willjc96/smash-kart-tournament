@@ -16,11 +16,19 @@ function HomePage() {
   const [numberOfPlayers, setNumberOfPlayers] = useState(2);
   const [eliminationType, setEliminationType] = useState('singleElimination');
   const [selectedGame, setSelectedGame] = useState(null);
+  const [selectedGameLabel, setSelectedGameLabel] = useState(null);
   const [nameOfPlayers, setNameOfPlayers] = useState([]);
   const [tournamentType, setTournamentType] = useState(null);
   const [playEachPlayer, setPlayEachPlayer] = useState(1);
 
   const navigate = useNavigate();
+
+  const listOfGames = [
+    { label: 'Mario Kart 8', value: 'marioKart8', icon: MarioKart8Icon },
+    { label: 'Super Smash Bros.', value: 'superSmashBros', icon: SmashBrosIcon },
+    { label: 'Chess', value: 'chess', icon: ChessIcon },
+    { label: 'Other', value: 'other', icon: EllipsisIcon }
+  ];
 
   const showModal = (showModal, tournamentType) => {
     setIsModalVisible(showModal);
@@ -45,10 +53,10 @@ function HomePage() {
   const handleOk = () => {
     setIsModalVisible(false);
     if (tournamentType === 'knockout') {
-      navigate('/create-knockout', { state: { tournamentTitle, numberOfPlayers, eliminationType, selectedGame, playerNames } });
+      navigate('/create-knockout', { state: { tournamentTitle, numberOfPlayers, selectedGame, selectedGameLabel, playerNames, eliminationType } });
     }
     else if (tournamentType === 'roundRobin') {
-      navigate('/create-round-robin', { state: { tournamentTitle, numberOfPlayers, selectedGame, playerNames, playEachPlayer } });
+      navigate('/create-round-robin', { state: { tournamentTitle, numberOfPlayers, selectedGame, selectedGameLabel, playerNames, playEachPlayer } });
     }
 
     // navigate to the respective tournament type creation page when clicking Ok on the Tournament Details Modal
@@ -60,6 +68,7 @@ function HomePage() {
     setNumberOfPlayers(2);
     setEliminationType('singleElimination');
     setSelectedGame(null);
+    setSelectedGameLabel(null);
     setTournamentTitle(null);
     // setNameOfPlayers([]);
     playerNames = [];  // still haven't managed to get the player inputs to clear on cancel of modal
@@ -82,7 +91,8 @@ function HomePage() {
   };
 
   const handleGameChange = (value) => {
-    setSelectedGame(value);
+    setSelectedGame(value.value);
+    setSelectedGameLabel(value.label[2]); // need to use the 2nd index due to the way labelInValue works
   };
 
   const handleGameSearch = () => { // need this function even though it contains no logic
@@ -124,7 +134,6 @@ function HomePage() {
           <button className='button-text' onClick={() => showModal(true, 'roundRobin')}>
             <p style={{ margin: '5px' }}>Round Robin</p>
           </button>
-          {/* </Link> */}
         </div>
       </div>
 
@@ -142,13 +151,13 @@ function HomePage() {
             onSearch={handleGameSearch}
             style={{ width: '50%' }}
             allowClear
+            labelInValue
             placeholder='Search For Game'
             filterOption={(input, option) => option.children[1].toLowerCase().includes(input.toLowerCase())}
           >
-            <Option value="marioKart8"><img src={MarioKart8Icon} style={{ height: '25px', borderRadius: '0.2rem' }} /> Mario Kart 8</Option>
-            <Option value="superSmashBros"><img src={SmashBrosIcon} style={{ height: '25px', borderRadius: '0.2rem' }} /> Super Smash Bros.</Option>
-            <Option value="chessIcon"><img src={ChessIcon} style={{ height: '25px', borderRadius: '0.2rem' }} /> Chess</Option>
-            <Option value="other"><img src={EllipsisIcon} style={{ height: '25px', borderRadius: '0.2rem' }} /> Other</Option>
+            {listOfGames.map((game) => {
+              return <Option value={game.value}><img src={game.icon} style={{ height: '25px', borderRadius: '0.2rem' }} /> {game.label}</Option>;
+            })}
           </Select>
         </div>
         {tournamentType === 'knockout' ?
