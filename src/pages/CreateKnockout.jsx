@@ -16,7 +16,7 @@ function CreateKnockout() {
       { playerNumber: 2, playerName: 'P3' }
     ]
   };
-  const { tournamentTitle, numberOfPlayers, playerNames, selectedGame, eliminationType } = state;
+  const { tournamentTitle, numberOfPlayers, playerNames, selectedGame, selectedGameLabel, eliminationType } = state;
 
   return (
     <>
