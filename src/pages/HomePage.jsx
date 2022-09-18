@@ -1,13 +1,12 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Avatar, Input, Modal, Select } from 'antd';
+import { Input, Modal, Select } from 'antd';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import MarioKart8Icon from '../icons/MarioKart8Icon.png';
 import SmashBrosIcon from '../icons/SSBU_Smash_Ball_Icon.png';
 import ChessIcon from '../icons/ChessIcon.png';
 import EllipsisIcon from '../icons/EllipsisIcon.png';
-import { listOfColours } from '../components/ListOfPlayerColours';
-
+import { getPlayerAvatar } from '../components/getPlayerAvatar';
 
 function HomePage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -17,7 +16,7 @@ function HomePage() {
   const [eliminationType, setEliminationType] = useState('singleElimination');
   const [selectedGame, setSelectedGame] = useState(null);
   const [selectedGameLabel, setSelectedGameLabel] = useState(null);
-  const [nameOfPlayers, setNameOfPlayers] = useState([]);
+  const [playerNames, setPlayerNames] = useState([]);
   const [tournamentType, setTournamentType] = useState(null);
   const [playEachPlayer, setPlayEachPlayer] = useState(1);
 
@@ -35,11 +34,11 @@ function HomePage() {
     setTournamentType(tournamentType);
   };
 
-  let playerNames = [];
-
   const handlePlayerNames = (value, index) => {
-    if (!playerNames.some((e) => e.playerNumber === index)) {
-      playerNames.push({ playerNumber: index, playerName: value });
+    const test = !playerNames.some((e) => e.playerNumber === index);
+    if (test) {
+      setPlayerNames(currentState => [...currentState, { playerNumber: index, playerName: value }]);
+      // pushes to state instead of replacing it
     } // if the player number isn't in the player names array then add that player number and data to it once it has data entered
     else {
       playerNames?.forEach((player) => {
@@ -58,6 +57,7 @@ function HomePage() {
     else if (tournamentType === 'roundRobin') {
       navigate('/create-round-robin', { state: { tournamentTitle, numberOfPlayers, selectedGame, selectedGameLabel, playerNames, playEachPlayer } });
     }
+    setPlayerNames([]);
 
     // navigate to the respective tournament type creation page when clicking Ok on the Tournament Details Modal
     // Also passes state saved in each of the hooks
@@ -70,9 +70,8 @@ function HomePage() {
     setSelectedGame(null);
     setSelectedGameLabel(null);
     setTournamentTitle(null);
-    // setNameOfPlayers([]);
-    playerNames = [];  // still haven't managed to get the player inputs to clear on cancel of modal
-    playEachPlayer(1);
+    setPlayerNames([]);  // still haven't managed to get the player inputs to clear on cancel of modal
+    setPlayEachPlayer(1);
   };
 
   const handleTitleChange = (event) => {
@@ -92,7 +91,7 @@ function HomePage() {
 
   const handleGameChange = (value) => {
     setSelectedGame(value.value);
-    setSelectedGameLabel(value.label[2]); // need to use the 2nd index due to the way labelInValue works
+    setSelectedGameLabel(value.label[1]); // need to use the 2nd index due to the way labelInValue works
   };
 
   const handleGameSearch = () => { // need this function even though it contains no logic
@@ -111,7 +110,7 @@ function HomePage() {
     for (let i = 0; i < numberOfPlayers; i++) {
       playerInputs.push(
         <div className='flex-div'>
-          <Avatar shape='square' size='medium' style={{ backgroundColor: listOfColours[i], borderWidth: '0.5px', border: 'solid', borderColor: 'grey' }} />
+          {getPlayerAvatar(i)}
           <div className='horizontal-input-align'>
             <Input placeholder='Enter Players Name' className='input-player-name' onChange={(e) => handlePlayerNames(e.target.value, i)} />
           </div>
@@ -141,7 +140,7 @@ function HomePage() {
         <div className='input-fields'>
           <Input style={{ textAlign: 'center' }} onChange={handleTitleChange} value={tournamentTitle} placeholder='Enter Tournament Name' />
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
+        <div className='centered-div'>
           <h4 style={{ margin: 0 }}>Game:</h4>
           <Select
             showSearch
@@ -156,12 +155,16 @@ function HomePage() {
             filterOption={(input, option) => option.children[1].toLowerCase().includes(input.toLowerCase())}
           >
             {listOfGames.map((game) => {
-              return <Option value={game.value}><img src={game.icon} style={{ height: '25px', borderRadius: '0.2rem' }} /> {game.label}</Option>;
+              return (
+                <Option value={game.value} key={game.value}>
+                  <img src={game.icon} style={{ height: '25px', borderRadius: '0.2rem' }} />
+                  {game.label}
+                </Option>);
             })}
           </Select>
         </div>
         {tournamentType === 'knockout' ?
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
+          <div className='centered-div'>
             <h4 style={{ margin: 0 }}>Elimination Type:</h4>
             <Select value={eliminationType} onChange={handleEliminationTypeSelect} className="select-before">
               <Option value='singleElimination'>Single Elimination</Option>
@@ -169,7 +172,7 @@ function HomePage() {
             </Select>
           </div>
           :  // if tournamentType is 'roundRobin
-          <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
+          <div className='centered-div'>
             <h4 style={{ margin: 0 }}>Play each player:</h4>
             <Select value={playEachPlayer} onChange={handlePlayEachPlayerSelect} className="select-before">
               <Option value={1}>One Time</Option>
@@ -178,11 +181,14 @@ function HomePage() {
             </Select>
           </div>
         }
-        <div style={{ display: 'flex', alignItems: 'center', textAlign: 'center', marginBottom: '15px', justifyContent: 'space-between' }}>
+        <div className='centered-div'>
           <h4 style={{ margin: 0 }}>Number Of Participants:</h4>
           <Select value={numberOfPlayers} onChange={handlePlayerNumberSelect} className="select-before">
             {playerNumberOptions.map((option) => {
-              return <Option value={option.label}>{option.label}</Option>;
+              return (
+                <Option value={option.label} key={option.value}>
+                  {option.label}
+                </Option>);
             })}
           </Select>
         </div>

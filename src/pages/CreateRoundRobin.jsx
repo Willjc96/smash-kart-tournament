@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
+import { createRoundMatchups } from '../components/createRoundMatchups';
+import { getMatchCard } from '../components/getMatchCard';
 import { shiftPlayerOrder } from '../components/shiftPlayerOrder';
 
 function CreateRoundRobin() {
@@ -26,15 +28,8 @@ function CreateRoundRobin() {
   };
   createPlayerMatchups();
 
-  const roundMatchups = [];
-  const createRoundMatchups = () => {
-    for (let roundNumber = 0; roundNumber < numberOfRounds; roundNumber++) {
-      roundMatchups.push(
-        { [`Round${roundNumber}`]: [] }
-      );
-    };
-  };
-  createRoundMatchups();
+  const roundMatchups = createRoundMatchups(numberOfRounds);
+
   const shuffledPlayers = orderedPlayerList
     .map(value => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
@@ -53,6 +48,12 @@ function CreateRoundRobin() {
     [teamA, teamB] = shiftPlayerOrder(teamA, teamB);
   }
 
+  const findPlayer = ({ playerNames, match }, index) => {
+    return playerNames.filter((player) => {
+      return player.playerNumber == match[index];
+    })[0];
+  };
+
   return (
     <>
       <div className='title'>
@@ -64,25 +65,19 @@ function CreateRoundRobin() {
         {roundMatchups.map((round, index) => {
           const matchRounds = round[`Round${[index]}`];
           return (
-            <div>
+            <div className='round'>
               <h3>
                 Round {index + 1}
               </h3>
-              {matchRounds.map((match, index) => {
-                const firstPlayerMatchupName = playerNames.filter((player) => {
-                  return player.playerNumber == match[0];
-                })[0]?.playerName;
-                const secondPlayerMatchupName = playerNames.filter((player) => {
-                  return player.playerNumber == match[1];
-                })[0]?.playerName;
-                return (
-                  <div>
-                    <p>
-                      Match {index + 1}: {firstPlayerMatchupName} Vs {secondPlayerMatchupName}
-                    </p>
-                  </div>
-                );
-              })}
+              <div className='round-matches'>
+                {matchRounds.map((match, index) => {
+                  const firstPlayerMatchup = findPlayer({ playerNames, match }, 0);
+                  const secondPlayerMatchup = findPlayer({ playerNames, match }, 1);
+                  return (
+                    getMatchCard(index, firstPlayerMatchup, secondPlayerMatchup)
+                  );
+                })}
+              </div>
             </div>
           );
         })}
