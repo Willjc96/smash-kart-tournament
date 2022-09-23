@@ -6,11 +6,9 @@ export const getPlayerAvatar = (playerId) => {
     <Avatar
       shape='square'
       size='medium'
+      className='avatar-icon'
       style={{
         backgroundColor: listOfColours[playerId],
-        borderWidth: '0.5px',
-        border: 'solid',
-        borderColor: 'grey'
       }}
     />
   );
