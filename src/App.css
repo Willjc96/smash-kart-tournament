@@ -52,6 +52,15 @@
 
 }
 
+.results {
+  background-color: lightgray;
+  border-radius: 0.5rem;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
 .round {
   background-color: lightgray;
   border-radius: 0.5rem;
@@ -61,7 +70,13 @@
   padding: 10px;
 }
 
-.round-matches {}
+.round-matches-grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  padding: 10px;
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, 24em);
+}
 
 .match-card {
   padding-bottom: 10px;
@@ -70,9 +85,32 @@
 
 .player-card {
   background-color: aliceblue;
-  border-top-right-radius: 0.2rem;
-  border-bottom-right-radius: 0.2rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+  border-top-left-radius: 0.1rem;
+  border-bottom-left-radius: 0.1rem;
+}
+
+.avatar-icon {
+  border-width: 0.1px;
+  border: solid;
+  border-color: grey;
+  border-radius: 0.1rem;
+}
+
+.ant-select:not(.ant-select-customize-input) .ant-select-selector  {
+  background: none;
+}
+
+.score-input-top-empty {
+  float: right;
   width: 20%;
+  border-top-right-radius: 0.5rem;
+}
+.score-input-bottom-empty {
+  float: right;
+  width: 20%;
+  border-end-end-radius: 0.5rem;
 }
 
 .tournament-details-modal {
@@ -86,7 +124,6 @@
   width: 40%;
 }
 
-
 .input-fields {
   margin: 0px 15px 15px 15px;
 }
@@ -96,15 +133,3 @@
   width: 80vw;
 }
 
-.ant-modal-body {
-  padding-top: 10px;
-  height: 100%;
-  overflow-y: scroll;
-  overflow: auto;
-  max-height: 60vh;
-}
-/* body > div:nth-child(3) > div > div.ant-modal-wrap > div {
-position: absolute;
-left: 1em;
-right: 1em;
-} */
